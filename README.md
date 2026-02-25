@@ -12,3 +12,4 @@ _À compléter au fil des séances._
 ## Auteur
 - Nom : Mathias FERREIRA DA SILVA
 - Date de création : 25/02/2026
+- `docs/` — Documentation d'architecture
