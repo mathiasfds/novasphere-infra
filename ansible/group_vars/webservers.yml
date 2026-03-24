@@ -1,0 +1,27 @@
+---
+# group_vars/webservers.yml — Variables centralisées pour le groupe webservers
+app_name: "NovaSphere"
+app_version: "2.0"
+env: "dev"
+http_port: 80
+
+# Liste des paquets (Exercice 2 - Boucles)
+packages:
+  - nginx
+  - curl
+  - htop
+  - tree
+  - jq
+
+# Configuration Nginx
+nginx_server_name: "_"
+nginx_root: "/var/www/html"
+
+# Utilisateurs applicatifs (Exercice 4 - Dictionnaires)
+app_users:
+  - name: deployer
+    comment: "Compte de déploiement NovaSphere"
+    shell: /bin/bash
+  - name: monitoring
+    comment: "Compte de monitoring"
+    shell: /usr/sbin/nologin

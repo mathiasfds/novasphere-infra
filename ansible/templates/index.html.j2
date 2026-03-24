@@ -1,0 +1,104 @@
+{# templates/index.html.j2 — Généré par Ansible #}
+
+<!DOCTYPE html>
+
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>{{ app_name }} — {{ env }}</title>
+<style>
+body {
+font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+max-width: 800px;
+margin: 50px auto;
+background-color: #f0f2f5;
+color: #333;
+}
+.container {
+background: white;
+padding: 2rem;
+border-radius: 12px;
+box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+h1 {
+color: #2c3e50;
+border-bottom: 3px solid #3498db;
+padding-bottom: 10px;
+}
+table {
+border-collapse: collapse;
+width: 100%;
+margin-top: 20px;
+}
+td, th {
+border: 1px solid #ddd;
+padding: 12px;
+text-align: left;
+}
+th {
+background-color: #3498db;
+color: white;
+}
+.status-badge {
+display: inline-block;
+padding: 4px 12px;
+border-radius: 20px;
+background-color: #2ecc71;
+color: white;
+font-size: 0.8rem;
+font-weight: bold;
+}
+.footer {
+margin-top: 30px;
+font-size: 0.85rem;
+color: #7f8c8d;
+text-align: center;
+border-top: 1px solid #eee;
+padding-top: 20px;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>{{ app_name }} <span class="status-badge">Opérationnel</span></h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Information</th>
+                <th>Valeur</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Environnement</td>
+                <td><strong>{{ env | upper }}</strong></td>
+            </tr>
+            <tr>
+                <td>Version de l'application</td>
+                <td>v{{ app_version }}</td>
+            </tr>
+            <tr>
+                <td>Nom du serveur (Inventory)</td>
+                <td><code>{{ inventory_hostname }}</code></td>
+            </tr>
+            <tr>
+                <td>Adresse IP Publique</td>
+                <td>{{ ansible_host }}</td>
+            </tr>
+            <tr>
+                <td>Paquets système installés</td>
+                <td>{{ packages | join(', ') }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="footer">
+        Page générée dynamiquement par <strong>Ansible</strong> pour l'équipe infrastructure.<br>
+        <em>Toute modification manuelle de ce fichier sera écrasée lors du prochain déploiement.</em>
+    </div>
+</div>
+
+
+</body>
+</html>

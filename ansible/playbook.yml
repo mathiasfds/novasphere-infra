@@ -1,53 +1,51 @@
 ---
-- name: Configuration du serveur web NovaSphere
-  hosts: webservers             # TODO 2 : Le groupe de ton inventaire
-  become: true                  # Exécuter en sudo
+- name: Configuration industrielle du serveur web NovaSphere
+  hosts: webservers
+  become: true
   tasks:
     - name: Mettre à jour le cache APT
       ansible.builtin.apt:
         update_cache: true
         cache_valid_time: 3600
 
-    - name: Installer Nginx
+    - name: Installer les paquets requis (Boucle S06)
       ansible.builtin.apt:
-        name: nginx             # TODO 3 : Le package à installer
+        name: "{{ item }}"
         state: present
+      loop: "{{ packages }}"
 
-    - name: S'assurer que Nginx est démarré et activé au boot
+    - name: S'assurer que Nginx est démarré
       ansible.builtin.service:
         name: nginx
-        state: started           # TODO 4 : L'état "démarré"
+        state: started
         enabled: true
 
-    - name: Déployer la page d'accueil NovaSphere
-      ansible.builtin.copy:
-        dest: /var/www/html/index.html
-        content: |
-          <!DOCTYPE html>
-          <html>
-          <head><title>NovaSphere</title></head>
-          <body>
-          <h1>Bienvenue sur NovaSphere</h1>
-          <p>Serveur configuré automatiquement par Ansible.</p>
-          <p>Environnement : dev</p>
-          </body>
-          </html>
+    - name: Déployer la page d'accueil (Template Jinja2 S06)
+      ansible.builtin.template:
+        src: templates/index.html.j2
+        dest: "{{ nginx_root }}/index.html"
         owner: www-data
         group: www-data
-        mode: "0644"
-# ... (début du playbook identique)
-    - name: Déployer la page d'accueil NovaSphere
-      ansible.builtin.copy:
-        dest: /var/www/html/index.html
-        content: |
-          # ... (contenu HTML)
-        owner: www-data
-        group: www-data
-        mode: "0644"
-      notify: Redémarrer Nginx # TODO 5 : On appelle le handler par son nom
+        mode: '0644'
+
+    - name: Installer les outils de debug (Condition S06)
+      ansible.builtin.apt:
+        name: "{{ item }}"
+        state: present
+      loop: [strace, tcpdump, net-tools]
+      when: env == "dev"
+
+    - name: Créer les utilisateurs applicatifs (Dictionnaire S06)
+      ansible.builtin.user:
+        name: "{{ item.name }}"
+        comment: "{{ item.comment }}"
+        shell: "{{ item.shell }}"
+        create_home: true
+        state: present
+      loop: "{{ app_users }}"
 
   handlers:
     - name: Redémarrer Nginx
       ansible.builtin.service:
         name: nginx
-        state: restarted # TODO 6 : L'état pour un redémarrage
+        state: restarted
